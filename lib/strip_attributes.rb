@@ -1,6 +1,8 @@
 require 'active_support'
+require 'active_model'
 
-module StripAttributes
+puts defined?(ActiveModel::Validations::HelperMethods)
+module ActiveModel::Validations::HelperMethods
   # Strips whitespace from model fields and converts blank values to nil.
   def h_attributes!(options = nil)
     before_validation do |record|
@@ -55,7 +57,9 @@ module StripAttributes
       end
     end
   end
+end
 
+module StripAttributes
   # Necessary because Rails has removed the narrowing of attributes using :only
   # and :except on Base#attributes
   def self.narrow(record, options)

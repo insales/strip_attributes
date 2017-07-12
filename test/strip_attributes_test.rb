@@ -1,37 +1,37 @@
-require "#{File.dirname(__FILE__)}/test_helper"
+require 'test/unit'
+require 'active_model'
+require 'virtus'
+require 'strip_attributes'
 
-module MockAttributes
-  def self.included(base)
-    base.column :foo,  :string
-    base.column :bar,  :string
-    base.column :biz,  :string
-    base.column :baz,  :string
-    base.column :bang, :string
-  end
+class Model
+  include Virtus.model
+  include ActiveModel::Validations
+  include ActiveModel::Validations::Callbacks
+
+  attribute :foo, String
+  attribute :bar, String
+  attribute :biz, String
+  attribute :baz, String
+  attribute :bang, String
 end
 
-class StripAllMockRecord < ActiveRecord::Base
-  include MockAttributes
+class StripAllMockRecord < Model
   strip_attributes!
 end
 
-class StripOnlyOneMockRecord < ActiveRecord::Base
-  include MockAttributes
+class StripOnlyOneMockRecord < Model
   strip_attributes! :only => :foo
 end
 
-class StripOnlyThreeMockRecord < ActiveRecord::Base
-  include MockAttributes
+class StripOnlyThreeMockRecord < Model
   strip_attributes! :only => [:foo, :bar, :biz]
 end
 
-class StripExceptOneMockRecord < ActiveRecord::Base
-  include MockAttributes
+class StripExceptOneMockRecord < Model
   strip_attributes! :except => :foo
 end
 
-class StripExceptThreeMockRecord < ActiveRecord::Base
-  include MockAttributes
+class StripExceptThreeMockRecord < Model
   strip_attributes! :except => [:foo, :bar, :biz]
 end
 
