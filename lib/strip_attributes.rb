@@ -1,7 +1,6 @@
 require 'active_support'
 require 'active_model'
 
-puts defined?(ActiveModel::Validations::HelperMethods)
 module ActiveModel::Validations::HelperMethods
   # Strips whitespace from model fields and converts blank values to nil.
   def h_attributes!(options = nil)
