@@ -1,7 +1,4 @@
-require 'test/unit'
-require 'active_model'
-require 'virtus'
-require 'strip_attributes'
+require 'test_helper'
 
 class Model
   include Virtus.model

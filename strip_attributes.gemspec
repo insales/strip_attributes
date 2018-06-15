@@ -15,5 +15,8 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'activemodel', '>= 3.2', '< 4.1'
   s.add_runtime_dependency 'activesupport'
+
   s.add_development_dependency 'virtus'
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'test-unit'
 end

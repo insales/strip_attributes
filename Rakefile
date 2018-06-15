@@ -8,6 +8,7 @@ task :default => :test
 desc 'Test the stripattributes plugin.'
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib'
+  t.libs << 'test'
   t.pattern = 'test/**/*_test.rb'
   t.verbose = true
 end
@@ -15,7 +16,7 @@ end
 desc 'Generate documentation for the stripattributes plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Stripattributes'
+  rdoc.title    = 'StripAttributes'
   rdoc.options << '--line-numbers'
   rdoc.rdoc_files.include('README.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb')
