@@ -1,80 +1,92 @@
 require 'active_support'
+require 'active_support/core_ext/array/wrap'
 require 'active_model'
 
 module ActiveModel::Validations::HelperMethods
   # Strips whitespace from model fields and converts blank values to nil.
   def h_attributes!(options = nil)
-    before_validation do |record|
-      attributes = StripAttributes.narrow(record, options)
-      attributes.each do |attr, value|
-        if value.respond_to?(:gsub)
-          next if record.respond_to?("#{attr}_changed?") and !record.send("#{attr}_changed?")
-          record.send( "#{attr}=", self.class.h(value))
-        end
-      end
+    StripAttributes.register_callback(self, options) do |value|
+      StripAttributes.h(value)
     end
   end
 
   def escape_javascript!(options = nil)
-    before_validation do |record|
-      attributes = StripAttributes.narrow(record, options)
-      attributes.each do |attr, value|
-        if value.respond_to?(:gsub)
-          next if record.respond_to?("#{attr}_changed?") and !record.send("#{attr}_changed?")
-          record.send("#{attr}=", ActionController::Base.helpers.sanitize(value)) if value.present?
-        end
-      end
+    StripAttributes.register_callback(self, options) do |value|
+      throw :skip if value.blank?
+      ActionController::Base.helpers.sanitize(value)
     end
   end
 
   def strip_tags!(options = nil)
-    before_validation do |record|
-      attributes = StripAttributes.narrow(record, options)
-      attributes.each do |attr, value|
-        if value.respond_to?(:gsub)
-          next if record.respond_to?("#{attr}_changed?") and !record.send("#{attr}_changed?")
-          record.send("#{attr}=", ActionController::Base.helpers.strip_tags(value)) if value.present?
-        end
-      end
+    StripAttributes.register_callback(self, options) do |value|
+      throw :skip if value.blank?
+      ActionController::Base.helpers.strip_tags(value)
     end
+  end
+
+  # For backward compatibility. Should be removed in future.
+  def h(*args)
+    StripAttributes.h(*args)
+  end
+
+  def strip_attributes!(options = nil)
+    blank_value = options[:blank_value] if options
+    StripAttributes.register_callback(self, options) do |value|
+      value.blank? ? blank_value : StripAttributes.strip(value)
+    end
+  end
+end
+
+module StripAttributes
+  module_function
+
+  # From https://github.com/rmm5t/strip_attributes/blob/master/lib/strip_attributes.rb
+  MULTIBYTE_WHITE = "\u180E\u200B\u200C\u200D\u2060\uFEFF"
+  MULTIBYTE_SPACE = /[[:space:]#{MULTIBYTE_WHITE}]/
+  MULTIBYTE_SUPPORTED  = "\u0020" == " "
+
+  def strip(value)
+    value =
+      if MULTIBYTE_SUPPORTED && Encoding.compatible?(value, MULTIBYTE_SPACE)
+        value.gsub(/\A#{MULTIBYTE_SPACE}+|#{MULTIBYTE_SPACE}+\z/, "")
+      else
+        value.strip
+      end
+    value.gsub(/\u00a0/, ' ')
   end
 
   def h(value)
     value.to_s.to_valid_utf8.gsub(/</,'&lt;').gsub(/>/,'&gt;').gsub(/\u00a0/, ' ')
   end
 
-  def strip_attributes!(options = nil)
-    blank_value = (options.nil? || !options.has_key?(:blank_value)) ? nil : options[:blank_value]
+  def prepare_options(options)
+    options ||= {}
+    %i[except only].each { |x| options[x] = Array.wrap(options[x]).map(&:to_s) if options[x] }
+    options
+  end
 
-    before_validation do |record|
-      attributes = StripAttributes.narrow(record, options)
+  def register_callback(model, options)
+    options = prepare_options(options)
+    model.before_validation do |record|
+      attributes = StripAttributes.fetch_attributes(record, options)
       attributes.each do |attr, value|
-        if value.respond_to?(:strip)
-          next if record.respond_to?("#{attr}_changed?") and !record.send("#{attr}_changed?")
-          record.send( "#{attr}=", value.blank? ? blank_value : ActiveSupport::Multibyte::Chars.new(value).strip.to_s.gsub(/\u00a0/, ' '))
-        end
+        next unless value.respond_to?(:gsub)
+        next if record.respond_to?("#{attr}_changed?") && !record.send("#{attr}_changed?")
+        catch(:skip) { record.send("#{attr}=", yield(value)) }
       end
     end
   end
-end
 
-module StripAttributes
-  # Necessary because Rails has removed the narrowing of attributes using :only
-  # and :except on Base#attributes
-  def self.narrow(record, options)
+  def fetch_attributes(record, options)
     attributes = record.attributes
-    if options.nil?
-      attributes
+    # support for Virtus - it has symbolized attrs hash.
+    attributes = attributes.stringify_keys if attributes.first.first.is_a?(Symbol)
+    if except = options[:except]
+      attributes.except(*except)
+    elsif only = options[:only]
+      Hash[only.map { |i| [i, record.send(i)] }]
     else
-      if except = options[:except]
-        except = Array(except).collect { |attribute| attribute.to_s }
-        attributes.except(*except)
-      elsif only = options[:only]
-        only = Array(only).collect { |attribute| attribute.to_s }
-        attributes.slice(*only).merge Hash[only.map { |i| [i, record.send(i)]}]
-      else
-        raise ArgumentError, "Options does not specify :except or :only (#{options.keys.inspect})"
-      end
+      attributes
     end
   end
 end
