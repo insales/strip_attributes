@@ -1,7 +1,4 @@
-require 'test/unit'
-require 'active_model'
-require 'virtus'
-require 'strip_attributes'
+require 'test_helper'
 
 class Model
   include Virtus.model
@@ -97,7 +94,7 @@ class StripAttributesTest < Test::Unit::TestCase
   def test_should_strip_non_break_space
     record = StripOnlyOneMockRecord.new(:foo => "\xC2\xA0foo\xC2\xA0bar\xC2\xA0")
     record.valid?
-    assert_equal "foo\xC2\xA0bar",   record.foo
+    assert_equal 'foo bar',   record.foo
   end
 
 end
