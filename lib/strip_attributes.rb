@@ -71,7 +71,13 @@ module StripAttributes
       attributes = StripAttributes.fetch_attributes(record, options)
       attributes.each do |attr, value|
         next unless value.respond_to?(:gsub)
-        next if record.respond_to?("#{attr}_changed?") && !record.send("#{attr}_changed?")
+        if record.respond_to?("will_save_change_to_#{attr}?")
+          # rails 5.1+
+          next unless record.send("will_save_change_to_#{attr}?")
+        elsif record.respond_to?("#{attr}_changed?")
+          # older rails
+          next unless record.send("#{attr}_changed?")
+        end
         catch(:skip) { record.send("#{attr}=", yield(value)) }
       end
     end
