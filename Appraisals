@@ -2,8 +2,8 @@
 
 if RUBY_VERSION <= "2.4"
   # on mac ruby 2.3 can be installed:
-  # brew install rbenv/tap/openssl@1.0
-  # rvm install 2.3.8 --with-openssl-dir=$(brew --prefix openssl@1.0)
+  # brew install rbenv/tap/openssl@1.0 readline libyaml
+  # rvm install 2.3.8 --with-openssl-dir=$(brew --prefix openssl@1.0) --with-readline-dir=$(brew --prefix readline) --autolibs=disable
   appraise "rails_3.2" do
     gem "activemodel", "3.2.22.5"
   end
