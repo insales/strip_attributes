@@ -1,6 +1,6 @@
 require 'test/unit'
+require 'logger'
 require 'active_model'
-require 'virtus'
 require 'pry'
 require 'rubygems'
 require 'strip_attributes'

@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     strip_attributes (1.1.0)
-      activemodel (>= 3.2, < 8.1)
+      activemodel (>= 6.0, < 8.1)
       activesupport
 
 GEM
@@ -26,25 +26,16 @@ GEM
       bundler
       rake
       thor (>= 0.14.0)
-    axiom-types (0.1.1)
-      descendants_tracker (~> 0.0.4)
-      ice_nine (~> 0.11.0)
-      thread_safe (~> 0.3, >= 0.3.1)
     base64 (0.3.0)
     benchmark (0.4.1)
     bigdecimal (3.2.2)
     byebug (12.0.0)
     coderay (1.1.3)
-    coercible (1.0.0)
-      descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.3)
-    descendants_tracker (0.0.4)
-      thread_safe (~> 0.3, >= 0.3.1)
     drb (2.2.3)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
-    ice_nine (0.11.2)
     logger (1.7.0)
     method_source (1.1.0)
     minitest (5.25.5)
@@ -60,13 +51,8 @@ GEM
     test-unit (3.7.0)
       power_assert
     thor (1.4.0)
-    thread_safe (0.3.6)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    virtus (2.0.0)
-      axiom-types (~> 0.1)
-      coercible (~> 1.0)
-      descendants_tracker (~> 0.0, >= 0.0.3)
 
 PLATFORMS
   arm64-darwin-24
@@ -80,7 +66,6 @@ DEPENDENCIES
   rake
   strip_attributes!
   test-unit
-  virtus
 
 BUNDLED WITH
    2.6.9
