@@ -1,15 +1,16 @@
 require 'test_helper'
 
 class Model
-  include Virtus.model
+  include ActiveModel::Model
+  include ActiveModel::Attributes
   include ActiveModel::Validations
   include ActiveModel::Validations::Callbacks
 
-  attribute :foo, String
-  attribute :bar, String
-  attribute :biz, String
-  attribute :baz, String
-  attribute :bang, String
+  attribute :foo, :string, default: nil
+  attribute :bar, :string, default: nil
+  attribute :biz, :string, default: nil
+  attribute :baz, :string, default: nil
+  attribute :bang, :string, default: nil
 end
 
 class StripAllMockRecord < Model

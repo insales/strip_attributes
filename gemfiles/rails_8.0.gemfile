@@ -4,6 +4,6 @@ source "http://rubygems.org"
 
 gem "pry"
 gem "pry-byebug"
-gem "activemodel", "4.2.11.3"
+gem "activemodel", "~>8.0.2"
 
 gemspec path: "../"

@@ -4,6 +4,9 @@ source "http://rubygems.org"
 
 gem "pry"
 gem "pry-byebug"
-gem "activemodel", "~>5.2.8"
+gem "activemodel", "~>7.0.8"
+gem "base64"
+gem "bigdecimal"
+gem "mutex_m"
 
 gemspec path: "../"

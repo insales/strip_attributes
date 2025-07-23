@@ -1,2 +1,5 @@
 .ruby-version
 Gemfile.lock
+
+# no modern bundler for old rubies:
+gemfiles/rails_6.1.gemfile.lock
