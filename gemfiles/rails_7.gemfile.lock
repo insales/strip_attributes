@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     strip_attributes (1.1.0)
-      activemodel (>= 3.2, < 8)
+      activemodel (>= 3.2, < 8.1)
       activesupport
 
 GEM
@@ -55,6 +55,7 @@ GEM
       descendants_tracker (~> 0.0, >= 0.0.3)
 
 PLATFORMS
+  arm64-darwin-24
   x86_64-darwin-21
   x86_64-linux
 

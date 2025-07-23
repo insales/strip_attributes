@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     strip_attributes (1.1.0)
-      activemodel (>= 3.2, < 8)
+      activemodel (>= 3.2, < 8.1)
       activesupport
 
 GEM
