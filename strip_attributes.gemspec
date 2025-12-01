@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.test_files     = `git ls-files -- {test,spec}/*`.split("\n")
   s.require_paths  = ["lib"]
 
-  s.add_runtime_dependency 'activemodel', '>= 6.0', '< 8.1'
+  s.add_runtime_dependency 'activemodel', '>= 6.0', '< 8.2'
   s.add_runtime_dependency 'activesupport'
 
   s.add_development_dependency 'appraisal'
